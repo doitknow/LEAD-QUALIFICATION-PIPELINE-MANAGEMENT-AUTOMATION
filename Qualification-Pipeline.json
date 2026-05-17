@@ -1,0 +1,240 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "13NClMNEBoQAffEF7yO5KLrg93TeTAbSNf4tQraz43Gk",
+          "mode": "list",
+          "cachedResultName": "Fairway & pin Inquiry Form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13NClMNEBoQAffEF7yO5KLrg93TeTAbSNf4tQraz43Gk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 895382602,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13NClMNEBoQAffEF7yO5KLrg93TeTAbSNf4tQraz43Gk/edit#gid=895382602"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1d0cac89-26ba-492b-acda-30dab79648c5",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "rxWxXLfS9LPwGciU",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d466dd2c-4e70-4684-a930-94080705f382",
+              "leftValue": "={{ $json['Inquiry Type'] }}",
+              "rightValue": "Corporate Teambuilding",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "fe9765e1-aefb-42ac-b4cc-d5d316ae15b1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RQX33uh4Id9G70hWGGnxn_9fTYJluz9KowatRJOFTGI",
+          "mode": "list",
+          "cachedResultName": "High-Value Event Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RQX33uh4Id9G70hWGGnxn_9fTYJluz9KowatRJOFTGI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RQX33uh4Id9G70hWGGnxn_9fTYJluz9KowatRJOFTGI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Group Size": "={{ $json['Estimated Group Size'] }}",
+            "Date Received": "={{ $json['Inquiry Type'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Group Size",
+              "displayName": "Group Size",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Received",
+              "displayName": "Date Received",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "512ba6e9-1439-4746-872d-d14157488575",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TjIUVt4MTNxUfD0k",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B074JDMR7",
+          "mode": "list",
+          "cachedResultName": "sales-alerts"
+        },
+        "text": "={{ $json.Name }}{{ $json['Group Size'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "88ff6fcb-3f7c-4629-a3c1-40d4c6cbb526",
+      "name": "Send a message",
+      "webhookId": "c83182b1-238f-4b73-8083-2ebad3c16be5",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "12Vy1Fay5itMLcro",
+          "name": "Slack OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8f35243a-2305-486b-8c66-0922ed9aba50",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "62c2bddc274c39d7edeb17837724ae93d4b7b679626b91cc7a44d19c35df94a3"
+  },
+  "id": "YmjaqMvryGsW4bbG",
+  "tags": []
+}
